@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>JOGO</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            color: aliceblue;
+            background-color: rgb(0, 0, 0);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            cursor: pointer;
+            flex-direction: column;
+        }
+        body.esconder-cursor {
+            cursor: none;
+        }
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none; /* Inicialmente oculto */
+        }
+        #game {
+            display: none; /* Inicialmente oculto */
+            flex-direction: column;
+            align-items: center;
+        }
+        #playButton {
+            background-color: red;
+            color: white;
+            font-size: 24px;
+            padding: 20px 40px;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+        #clickButton {
+            background-color: green;
+            color: white;
+            font-size: 20px;
+            padding: 15px 30px;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        #score {
+            color: white;
+            font-size: 18px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>PARABENS POR ACHAR O SEGREDO!!!</h1>
+    <button id="playButton">Joga</button>
+    
+    <div id="game">
+        <h2 style="color: white;">Clique o máximo que puder para ganhar um premio!</h2>
+        <button id="clickButton">Clique Aqui!</button>
+        <div id="score">Pontuação: 0</div>
+    </div>
+    
+    <video id="vid" autoplay playsinline>
+        <source src="atropelamento.mp4" type="video/mp4">
+    </video>
+
+    <script>
+        const playButton = document.getElementById("playButton");
+        const gameDiv = document.getElementById("game");
+        const clickButton = document.getElementById("clickButton");
+        const scoreDiv = document.getElementById("score");
+        const video = document.getElementById("vid");
+
+        let score = 0;
+        const targetScore = 9; // Após 9 cliques, toca o vídeo
+
+        playButton.addEventListener("click", () => {
+            playButton.style.display = "none";
+            gameDiv.style.display = "flex";
+        });
+
+        clickButton.addEventListener("click", () => {
+            score++;
+            scoreDiv.textContent = `Pontuação: ${score}`;
+            
+            if (score >= targetScore) {
+                // Esconde o jogo e mostra o vídeo
+                gameDiv.style.display = "none";
+                video.style.display = "block";
+                
+                // Toca o vídeo com áudio, fullscreen e esconde cursor
+                video.muted = false;
+                video.play().then(() => {
+                    document.body.classList.add("esconder-cursor");
+                    if (video.requestFullscreen) {
+                        video.requestFullscreen();
+                    }
+                }).catch(erro => {
+                    console.log("Erro ao tocar vídeo:", erro);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
